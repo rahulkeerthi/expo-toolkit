@@ -13,7 +13,10 @@
   "plugins": [
     {
       "name": "expo-toolkit",
-      "source": ".",
+      "source": {
+        "source": "github",
+        "repo": "rahulkeerthi/expo-toolkit"
+      },
       "description": "Comprehensive toolkit for React Native Expo app development - from project init through app store submission and maintenance",
       "version": "0.1.0",
       "author": {
