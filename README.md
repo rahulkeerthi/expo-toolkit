@@ -28,7 +28,7 @@ A comprehensive Claude Code plugin for React Native Expo app development - from 
 /plugin marketplace add rahulkeerthi/expo-toolkit
 
 # Install the plugin
-/plugin install expo-toolkit@withqwerty-marketplace
+/plugin install expo-toolkit
 
 # Verify installation
 /help
