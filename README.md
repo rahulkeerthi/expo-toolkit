@@ -1,134 +1,243 @@
-# App Store Preflight Skill
+# Expo Toolkit
 
-A Claude Code skill that validates your App Store Connect configuration before submission, catching common rejection reasons.
+A comprehensive Claude Code plugin for React Native Expo app development - from project initialisation through app store submission and maintenance.
 
-Built to prevent rejections like:
-- Guideline 2.1 - App Completeness (IAPs not submitted with version)
-- Guideline 2.3 - Accurate Metadata (screenshots, descriptions, age ratings)
-- Guideline 3.1.1 - In-App Purchase (restore purchases, loot box odds)
-- Guideline 3.1.2 - Subscriptions (trial config, upgrade/downgrade)
-- Guideline 5.1.1 - Data Collection (privacy labels, privacy policy)
+## Features
+
+- **Project Initialisation** - Interactive wizard for setting up Expo + EAS with environment-specific bundle IDs
+- **Build Preparation** - Pre-flight validation before running EAS builds
+- **OTA Updates** - Safe deployment of EAS Updates with environment checks
+- **App Store Submission** - Comprehensive checklists for iOS App Store Connect and Google Play Console
+- **Screenshot Automation** - Fastlane setup for automated screenshot generation
+- **Changelog Generation** - User-friendly "What's New" text from git history
+- **Monetisation** - RevenueCat integration guidance and cross-platform product setup
 
 ## Requirements
 
 - Claude Code CLI
-- Claude in Chrome MCP (required for browser automation)
-- RevenueCat MCP (optional, falls back to browser if unavailable)
+- Claude in Chrome MCP (required for browser automation in preflight commands)
+- RevenueCat MCP (optional, enhances IAP validation)
+- Context7 MCP (optional, enhances documentation research)
 
 ## Installation
 
-Copy the `.claude` directory into your project root:
+### Via Marketplace (Recommended)
 
 ```bash
-cp -r .claude /path/to/your/project/
+# Add the marketplace
+/plugin marketplace add rahulkeerthi/expo-toolkit
+
+# Install the plugin
+/plugin install expo-toolkit@withqwerty-marketplace
+
+# Verify installation
+/help
 ```
 
-Or manually copy:
-- `.claude/commands/app-store-preflight.md`
-- `.claude/skills/app-store-preflight/SKILL.md`
+### Manual Installation
 
-## Usage
+Clone and add as a local plugin:
 
 ```bash
-# Run with App Store Connect URL
-/app-store-preflight https://appstoreconnect.apple.com/apps/1234567890/distribution/ios/version/inflight
-
-# Or just the app ID
-/app-store-preflight 1234567890
+git clone https://github.com/rahulkeerthi/expo-toolkit.git
+cd expo-toolkit
+/plugin install --plugin-dir .
 ```
 
-The skill will:
+## Commands
 
-1. Ask about your app configuration (monetization, paywall, iPad support)
-2. Detect available MCPs (Claude in Chrome, RevenueCat)
-3. Navigate through App Store Connect sections
-4. Validate against Apple's App Review Guidelines
-5. Cross-check with RevenueCat if available
-6. Search your codebase for compliance issues
-7. Generate a structured report with blocking issues, warnings, and passed checks
+### `/init` - Project Initialisation
 
-## What It Checks
+Interactive wizard for setting up a new or existing Expo project with EAS configuration:
 
-### App Store Connect
+```bash
+/init
+```
 
+Sets up:
+- EAS initialisation and project linking
+- Dynamic `app.config.js` with APP_VARIANT pattern
+- Environment-specific bundle IDs (dev, preview, production)
+- Build profiles in `eas.json`
+- Push notification configuration (optional)
+- Project documentation (README, CLAUDE.md)
+
+### `/build` - Build Preparation
+
+Validates configuration before running EAS builds:
+
+```bash
+/build
+/build production --ios
+/build preview --all
+```
+
+Validates:
+- eas.json and app.config.js configuration
+- iOS/Android credentials
+- Environment variables and secrets
+- Project health (expo doctor)
+- Version numbers
+- Submission configuration (if auto-submit)
+
+Outputs the ready-to-run `eas build` command.
+
+### `/update` - OTA Update Preparation
+
+Prepares for EAS Update deployment:
+
+```bash
+/update
+/update production --message "Bug fixes"
+```
+
+Validates:
+- EAS Update configuration
+- Runtime version compatibility
+- Environment variables (no secrets leak)
+- Bundle size
+- Channel/branch setup
+
+### `/ios-preflight` - iOS App Store Connect Check
+
+Pre-submission checklist for App Store Connect:
+
+```bash
+/ios-preflight
+/ios-preflight 1234567890
+/ios-preflight https://appstoreconnect.apple.com/apps/...
+```
+
+Validates:
 - Build uploaded and selected
-- Screenshots for all device sizes (show app in use, not splash screens)
-- App name ≤30 characters
-- Description without trademarked terms
-- What's New describes changes
-- IAPs/subscriptions attached to version (common rejection cause!)
-- Review screenshots for each product
-- Contact information for App Review
-- Demo credentials if login required
-- Privacy policy URL
+- Screenshots for all device sizes
+- App metadata and descriptions
+- IAPs/subscriptions attached to version
+- Privacy policy and labels
 - Age rating
-- Privacy labels
+- Review information and demo credentials
+- RevenueCat cross-check (if available)
 
-### RevenueCat Cross-Check
+### `/android-preflight` - Google Play Console Check
 
-- iOS app configured with matching bundle ID
-- Product IDs match between RC and App Store Connect
-- Current offering set
-- Entitlements have products attached
+Pre-submission checklist for Play Console:
 
-### Code Verification
-
-- Restore purchases mechanism implemented
-- Privacy policy accessible in-app (not just App Store)
-- No alternative payment bypass (license keys, QR codes)
-- Trial duration matches App Store Connect config
-
-## Example Output
-
-```
-============================================
-APP STORE CONNECT PRE-FLIGHT CHECK
-============================================
-App: MyApp
-Version: 1.0.0
-Date: 2025-01-07
-
-BLOCKING ISSUES (will cause rejection)
-------------------------------------------
-- In-App Purchases: 2 subscriptions not attached to version
-- App Review: Demo credentials missing (app requires login)
-
-WARNINGS (may cause rejection or delays)
-------------------------------------------
-- Screenshots: iPad Pro 12.9" missing
-- Metadata: Promotional text empty
-
-PASSED CHECKS
-------------------------------------------
-- Version metadata complete
-- Privacy policy configured
-- Age rating set
-- Build uploaded and selected
-
-MANUAL VERIFICATION NEEDED
-------------------------------------------
-- Demo account credentials work
-- Screenshots accurately represent app
-
-============================================
-RECOMMENDATION: Fix 2 blocking issues first
-============================================
+```bash
+/android-preflight
+/android-preflight com.yourcompany.yourapp
 ```
 
-## Customization
+Validates:
+- Store listing (name, descriptions, graphics)
+- Content rating and target audience
+- Data safety form
+- Privacy policy
+- In-app products and subscriptions
+- Testing track configuration
+- First release requirements (manual AAB upload)
+- RevenueCat cross-check (if available)
 
-The skill uses an interactive questionnaire to skip irrelevant checks:
+### `/screenshots` - Screenshot Generation
 
-| Monetization | Skipped Checks |
-|-------------|----------------|
-| Free (No IAP) | IAP validation, RevenueCat, Paywall |
-| Paid Upfront | IAP validation, RevenueCat, Paywall |
-| Freemium | None (runs all checks) |
+Guide for Fastlane screenshot automation:
 
-| iPad Support | Screenshot Check |
-|-------------|-----------------|
-| iPhone Only | Skip iPad Pro validation |
-| Universal | Require iPad Pro 12.9" |
+```bash
+/screenshots
+/screenshots ios
+/screenshots android
+```
+
+Helps with:
+- Fastlane setup and configuration
+- Device/simulator setup for required sizes
+- Localised screenshot capture
+- Framing with device frames and text
+
+### `/changelog` - Changelog Generation
+
+Generate "What's New" text for app store submissions:
+
+```bash
+/changelog
+/changelog 1.3.0
+```
+
+Features:
+- Git history analysis
+- PR-based change extraction
+- User-friendly transformation
+- Platform-specific formatting (iOS 4000 chars, Android 500 chars)
+
+## Skills
+
+The plugin includes expert knowledge in:
+
+| Skill | Description |
+|-------|-------------|
+| `expo-eas` | EAS Build, Submit, credentials management, build profiles |
+| `expo-config` | app.config.js, environment variants, APP_VARIANT pattern |
+| `ios-submission` | App Store Connect, review guidelines, submission process |
+| `android-submission` | Play Console, testing tracks, store listing requirements |
+| `revenuecat` | SDK integration, entitlements, offerings, paywalls |
+| `fastlane` | Screenshot automation, snapshot, screengrab, frameit |
+
+## Agents
+
+Specialised agents that can be triggered proactively:
+
+| Agent | Description |
+|-------|-------------|
+| `expo-docs` | Research Expo/RN/EAS documentation after unexpected errors |
+| `revenuecat-docs` | Research RevenueCat documentation for monetisation questions |
+| `build-troubleshooter` | Diagnose and troubleshoot EAS build failures |
+
+## Environment-Specific Bundle IDs
+
+The plugin recommends the APP_VARIANT pattern for running multiple environments side-by-side:
+
+| Profile | Bundle ID | App Name |
+|---------|-----------|----------|
+| development | com.company.app.dev | MyApp (Dev) |
+| preview | com.company.app.preview | MyApp (Preview) |
+| production | com.company.app | MyApp |
+
+## First Release Notes
+
+### iOS
+- Auto-submit works immediately with proper credentials
+- TestFlight distribution available after first build
+
+### Android
+- **First AAB must be manually uploaded** to Play Console
+- After first upload, `--auto-submit` works for subsequent builds
+- Personal accounts require 12+ testers for 14+ days before production access
+
+## Example Workflow
+
+```bash
+# 1. Initialise new project
+/init
+
+# 2. Develop your app...
+
+# 3. Prepare for first build
+/build development --ios
+
+# 4. After development, prepare production build
+/build production --all
+
+# 5. Before App Store submission
+/ios-preflight
+
+# 6. Before Play Store submission
+/android-preflight
+
+# 7. Generate changelog
+/changelog
+
+# 8. After store approval, deploy OTA updates
+/update production --message "Bug fixes"
+```
 
 ## Contributing
 
@@ -140,7 +249,11 @@ MIT License - see LICENSE file.
 
 ## Credits
 
-Created by [@rahulkeerthi](https://github.com/rahulkeerthi)
+Created by Rahul Keerthi + Claude
 
-Based on Apple's App Review Guidelines:
-- https://developer.apple.com/app-store/review/guidelines/
+Based on:
+- [Expo Documentation](https://docs.expo.dev)
+- [EAS Documentation](https://docs.expo.dev/eas/)
+- [Apple App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
+- [Google Play Policy](https://play.google.com/console/about/guides/releasewithconfidence/)
+- [RevenueCat Documentation](https://docs.revenuecat.com)

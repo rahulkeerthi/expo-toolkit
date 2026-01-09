@@ -1,11 +1,14 @@
 ---
-name: app-store-preflight
-description: Pre-submission checklist for App Store Connect - catches common rejection reasons
+name: ios-preflight
+description: Pre-submission checklist for iOS App Store Connect - catches common rejection reasons
 argument-hint: "[app_id or app_store_connect_url]"
 model: haiku
+skills:
+  - ios-submission
+  - revenuecat
 ---
 
-# App Store Connect Pre-flight Check
+# iOS App Store Connect Pre-flight Check
 
 Validate App Store Connect configuration before submission to catch common rejection reasons.
 

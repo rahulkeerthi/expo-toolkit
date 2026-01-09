@@ -1,0 +1,20 @@
+{
+  "name": "expo-toolkit",
+  "version": "0.1.0",
+  "description": "Comprehensive toolkit for React Native Expo app development - from project init through app store submission and maintenance",
+  "author": {
+    "name": "Rahul Keerthi + Claude",
+    "email": "rahulkeerthi@gmail.com"
+  },
+  "keywords": [
+    "expo",
+    "react-native",
+    "eas",
+    "app-store",
+    "play-store",
+    "revenuecat",
+    "mobile",
+    "ios",
+    "android"
+  ]
+}

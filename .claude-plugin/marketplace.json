@@ -1,0 +1,36 @@
+{
+  "name": "withqwerty-marketplace",
+  "owner": {
+    "name": "Rahul Keerthi",
+    "email": "rahulkeerthi@gmail.com"
+  },
+  "metadata": {
+    "description": "Expo and React Native development tools for Claude Code",
+    "version": "1.0.0",
+    "homepage": "https://github.com/rahulkeerthi/expo-toolkit",
+    "license": "MIT"
+  },
+  "plugins": [
+    {
+      "name": "expo-toolkit",
+      "source": ".",
+      "description": "Comprehensive toolkit for React Native Expo app development - from project init through app store submission and maintenance",
+      "version": "0.1.0",
+      "author": {
+        "name": "Rahul Keerthi + Claude",
+        "email": "rahulkeerthi@gmail.com"
+      },
+      "keywords": [
+        "expo",
+        "react-native",
+        "eas",
+        "app-store",
+        "play-store",
+        "revenuecat",
+        "mobile",
+        "ios",
+        "android"
+      ]
+    }
+  ]
+}
