@@ -5,8 +5,8 @@
     "email": "rahulkeerthi@gmail.com"
   },
   "metadata": {
-    "description": "Expo and React Native development tools for Claude Code",
-    "version": "1.0.0",
+    "description": "Mobile development tools for Claude Code",
+    "version": "1.1.0",
     "homepage": "https://github.com/rahulkeerthi/expo-toolkit",
     "license": "MIT"
   },
@@ -17,23 +17,25 @@
         "source": "github",
         "repo": "rahulkeerthi/expo-toolkit"
       },
-      "description": "Comprehensive toolkit for React Native Expo app development - from project init through app store submission and maintenance",
+      "description": "Expo app development - init, builds, submissions, updates",
       "version": "0.1.0",
       "author": {
-        "name": "Rahul Keerthi + Claude",
-        "email": "rahulkeerthi@gmail.com"
+        "name": "Rahul Keerthi + Claude"
       },
-      "keywords": [
-        "expo",
-        "react-native",
-        "eas",
-        "app-store",
-        "play-store",
-        "revenuecat",
-        "mobile",
-        "ios",
-        "android"
-      ]
+      "keywords": ["expo", "react-native", "eas", "mobile"]
+    },
+    {
+      "name": "appstore-connect-mcp",
+      "source": {
+        "source": "github",
+        "repo": "rahulkeerthi/appstore-connect-mcp"
+      },
+      "description": "App Store Connect API - metadata, builds, TestFlight, IAP",
+      "version": "0.1.0",
+      "author": {
+        "name": "Rahul Keerthi + Claude"
+      },
+      "keywords": ["app-store", "ios", "testflight", "iap"]
     }
   ]
 }
